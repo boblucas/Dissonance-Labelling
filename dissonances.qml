@@ -610,32 +610,6 @@ MuseScore {
         }
     }
 
-    // if there is any 5th or 4th that gives a root, otherwise prefer duplicated note, otherwise prefer bass note.
-    function root(notes)
-    {
-        if(notes.length === 0) return undefined;
-
-        var v = [0,0,0,0,0,0,0,0,0,0,0,0];
-        for(var i = 0; i < notes.length; ++i)
-        {
-            for(var j = i+1; j < notes.length; ++j)
-            {
-                var c = interval(notes[i], notes[j]);
-                var l = Math.min(notes[i].chroma_pitch % 12, notes[j].chroma_pitch % 12);
-                var h = Math.max(notes[i].chroma_pitch % 12, notes[j].chroma_pitch % 12);
-                // Duplicated notes are more likely to be the root
-                if(c === 0) v[l] += 2;
-                // fifths and fourths strongly imply a root
-                if(c === 7) v[l] += 4;
-                if(c === 5) v[h] += 4;
-            }
-        }
-
-        // Lowest note is more likely to be root
-        v[Math.min.apply(null, notes.map(function(x) { return x.chroma_pitch; })) % 12] += 1;
-        return v.indexOf(Math.max.apply(null, v));
-    }
-
     // Now just iterate all pairs of voices and query the dissonance_info on all dissonances
     function match_dissonances(score)
     {
@@ -829,24 +803,6 @@ MuseScore {
 
     }
 
-    function export_abc(score)
-    {
-        var out = "";
-        var voices = read_all_voices(score, false);
-        var total = 0;
-        for(var i = 0 ; i < voices.length; ++i)
-        {
-            for(var j = 0; j < voices[i].notes.length; ++j)
-                total += voices[i].notes[j].duration;
-
-
-            //for(var j = 0; j < voices[i].notes.length; ++j)
-            //    out += "(" + voices[i].notes[j].pitch + ',' + voices[i].notes[j].start + ',' + voices[i].notes[j].duration + "), ";
-            //out += "\n";
-        }
-        console.log(total)
-    }
-
     onRun: {
         polyfill();
 
@@ -855,7 +811,6 @@ MuseScore {
             Qt.quit();
         }
 
-        //export_abc(curScore);
         match_dissonances(curScore);
         Qt.quit();
     }
