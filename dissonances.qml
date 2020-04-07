@@ -319,6 +319,9 @@ MuseScore {
             };
         };
 
+        if(!cursor.measure)
+            return {id:Math.random().toString(), notes: []};
+
         var voice = [];
         var prev_ticks = cursor.tick;
         var measure_offset = 0;
@@ -338,7 +341,7 @@ MuseScore {
                 voice[voice.length-1].end = cursor.tick;
             }
 
-            var beat = current_measure_length  / cursor.measure.timesigActual.numerator;
+            var beat = (current_measure_length  / cursor.measure.timesigActual.numerator);
             var node = read_chordrest(cursor.element, cursor.tick, (cursor.tick - measure_offset) % beat == 0, current_measure_number);
             if(node.pitch)
             {
@@ -367,7 +370,7 @@ MuseScore {
     {
         if(merge_notes === undefined) merge_notes = true;
         var full_voices = [];
-        for(var i = 0; i < score.nstaves; ++i)
+        for(var i = 0; i < score.nstaves*4; ++i)
         {
             var cursor = score.newCursor();
             var end = 0xFFFFFFF;
@@ -375,8 +378,7 @@ MuseScore {
             if(cursor.segment) end = cursor.tick;
                 cursor.rewind(cursor.segment ? 1 : 0);
 
-            cursor.staffIdx = i;
-            cursor.voice = 0;
+            cursor.track = i;
             if(merge_notes)
                 full_voices.push(merge_repeated_notes(read_voice(cursor, end)));
             else
@@ -779,8 +781,8 @@ MuseScore {
         for(var staff = 0; staff < all_labels.length; ++staff)
         {
             var cursor = score.newCursor();
-            cursor.staffIdx = staff;
-            cursor.voice = 0;
+            cursor.staffIdx = Math.floor(staff / 4);
+            cursor.voice = staff % 4;
             cursor.rewind(0);
 
             var staff_labels = all_labels[staff].sort();
