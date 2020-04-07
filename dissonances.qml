@@ -182,15 +182,33 @@ MuseScore {
     function cover_cost(weights, m, cover)
     {
         var total = 0;
+        var node_costs = {};
+
         for(var edge in weights)
         {
-            var has_a = cover.includes(edge.split(" ")[0]);
-            var has_b = cover.includes(edge.split(" ")[1]);
+            var a = edge.split(" ")[0];
+            var b = edge.split(" ")[1];
+
+            var has_a = cover.includes(a);
+            var has_b = cover.includes(b);
             if(!has_a && !has_b) continue; // not a cover should never happen
-            if(!has_a) total += weights[edge][1];
-            else if(!has_b) total += weights[edge][0];
-            else total += Math.min(weights[edge][0], weights[edge][1]);
+
+            if(!has_a) node_costs[b] = Math.max(node_costs[b] || 0, weights[edge][1]);
+            else if(!has_b) node_costs[a] = Math.max(node_costs[a] || 0, weights[edge][0]);
+            else
+            {
+                if(weights[edge][0] < weights[edge][1])
+                    node_costs[a] = Math.max(node_costs[a] || 0, weights[edge][0]);
+                else
+                    node_costs[b] = Math.max(node_costs[b] || 0, weights[edge][1]);
+            }
         }
+
+        //console.log(cover, print_json(node_costs));
+
+        for(var node in node_costs)
+            total += node_costs[node];
+
         return total + cover.length*0.01;
     }
 
