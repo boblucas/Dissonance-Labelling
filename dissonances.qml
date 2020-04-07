@@ -256,16 +256,19 @@ MuseScore {
         if(count(closed_edges.arr) >= edge_count)
         {
             if(!min_cover.cover || cover_cost(w, m, min_cover.cover) > cover_cost(w, m, state))
+            {
                 min_cover.cover = state.concat();
+            }
         }
 
-        for(var i in m)
+        var node_ids = Object.keys(m).sort();
+        for(var i = j; i < node_ids.length; ++i)
         {
-            if(i < j || state.includes(i)) continue;
-            var added = closed_edges.merge(m[i]);
-            state.push(i);
+            if(state.includes(node_ids[i])) continue;
+            var added = closed_edges.merge(m[node_ids[i]]);
+            state.push(node_ids[i]);
             _best_cover(m, w, i + 1, closed_edges, edge_count, min_cover, state, total_compute);
-            state.pop(i);
+            state.pop();
             closed_edges.subtract(added);
         }
         return min_cover.cover;
