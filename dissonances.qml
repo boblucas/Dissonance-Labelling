@@ -720,8 +720,11 @@ MuseScore {
                         if(name_a === WRONG) name_a = "?";
                         if(name_b === WRONG) name_b = "?";
 
-                        var id_a = (at(voices[i], t).start+tf) + "_" + i;
-                        var id_b = (at(voices[j], t).start+tf) + "_" + j;
+                        var a_t = at(voices[i], t).start+tf;
+                        var b_t = at(voices[j], t).start+tf;
+
+                        var id_a = a_t + "_" + i;
+                        var id_b = b_t + "_" + j;
 
                         if(!graph[id_a]) graph[id_a] = pairSet();
                         if(!graph[id_b]) graph[id_b] = pairSet();
@@ -729,8 +732,11 @@ MuseScore {
                         graph[id_a].insert(id_a, id_b);
                         graph[id_b].insert(id_b, id_a);
 
+                        var a_bass = at(full_bass, a_t).chroma_pitch === at(voices[i], t).chroma_pitch ? 1.5 : 1;
+                        var b_bass = at(full_bass, b_t).chroma_pitch === at(voices[j], t).chroma_pitch ? 1.5 : 1;
+
                         names[edge_id(id_a, id_b)] = [id_a < id_b ? name_a : name_b, id_a < id_b ? name_b : name_a];
-                        weights[edge_id(id_a, id_b)] = [id_a < id_b ? costs[name_a] : costs[name_b], id_a < id_b ? costs[name_b] : costs[name_a]];
+                        weights[edge_id(id_a, id_b)] = [id_a < id_b ? costs[name_a]*a_bass : costs[name_b]*b_bass, id_a < id_b ? costs[name_b]*b_bass : costs[name_a]*a_bass];
                     }
                     t = next_moment(voices[i], voices[j], t);
                 }
