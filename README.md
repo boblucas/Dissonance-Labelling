@@ -5,9 +5,9 @@ A MuseScore plugin that names the dissonances in common practice period counterp
 
 ![Image of the Art Of Fugue as analysed by this plugin](kdf_analysed.png)
 
-To install simply place the `dissonances.qml` in your MuseScore plugins folder. It works quite well on the likes of Palestrina, Pachelbel & Bach. But you will run into trouble with much earlier music (say Josquin de Prez) or much later music (Wagner). Each voice needs to be on its own staff, it will analyze anything selected. Contrapuntus I will take about 20 seconds, the whole Missa Papae by Palestrina will take 5 minutes. For big pieces or very strange situations it will crash MuseScore, be warned.
+To install simply place the `dissonances.qml` in your MuseScore plugins folder. It works quite well on the likes of Palestrina, Pachelbel & Bach. But you will run into trouble with much earlier music (say Josquin de Prez) or much later music (Wagner). It will analyze anything selected. Contrapuntus I will take about 20 seconds, the whole Missa Papae by Palestrina will take 5 minutes. For big pieces or very strange situations it will crash MuseScore, be warned.
 
-The code quality is not great, it's a quick and dirty port from python and there are some still needed features like multiple voices on a staff, any understanding of pedal tones and any understanding of compound lines. I think the basic concepts are pretty solid, but there is still much low hanging fruit to pick before this is a complete analysis tool.
+The code quality is not great, it's a quick and dirty port from python and there are some still needed features like any understanding of pedal tones and any understanding of compound lines. I think the basic concepts are pretty solid, but there is still much low hanging fruit to pick before this is a complete analysis tool.
 
 Some of the labels for suspenses are quite specific
 * SUS+ = delayed by 3th down into consonance step up resolving
